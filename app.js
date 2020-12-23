@@ -66,6 +66,20 @@ app.put('/quotes/:id', async (req, res)=>{
     }
 });
 
+app.use((req, res, next) => {
+    const err = new Error("Not found");
+    next(err);
+});
+
+app.use((err, req, res, next) =>{
+    res.status(err.status || 500);
+    res.json({
+        error: {
+            message: err.message
+        }
+    })
+});
+
 //    - Send a DELETE request to /quotes/:id to DELETE a quote
 app.delete("/quotes/:id", async(req, res) =>{
     try{
