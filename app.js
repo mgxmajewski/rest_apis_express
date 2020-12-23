@@ -27,13 +27,14 @@ app.get('/quotes/:id', async (req, res)=>{
 
 app.post('/quotes', async(req, res) =>{
     try{
+        throw new Error("pofspofp[ofa[sdfoa");
         const quote = await records.createQuote({
             quote: req.body.quote,
             author: req.body.author
         });
         res.json(quote);
     }catch (err){
-        res.json({message: err.message});
+        res.status(500).json({message: err.message});
     }
 });
 
