@@ -49,7 +49,7 @@ app.post('/quotes', async(req, res) =>{
 });
 
 //    - Send a PUT request to /quotes/:id to UPDATE (edit) a quote
-app.put('/quotes/:id', async (req, res)=>{
+app.put('/quotes/:id', async (req, res, next)=>{
     try{
         const quote = await records.getQuote(req.params.id);
         if(quote){
@@ -62,12 +62,28 @@ app.put('/quotes/:id', async (req, res)=>{
             res.status(404).json({message: "Wasn't foud"});
         }
     }catch (e) {
-        res.status(500).json({message: err.message});
+        next(err);
     }
 });
 
+
+//    - Send a DELETE request to /quotes/:id to DELETE a quote
+app.delete("/quotes/:id", async(req, res, next) =>{
+    try{
+        throw new Error("smth wrong");
+        const quote = await records.getQuote(req.params.id);
+        await records.deleteQuote(quote);
+        res.status(204).end();
+    }catch (err) {
+        next(err);
+    }
+});
+
+//    - Send a GET request to /quotes/quote/random to READ (view) a random quote
+
 app.use((req, res, next) => {
     const err = new Error("Not found");
+    err.status = 404;
     next(err);
 });
 
@@ -79,19 +95,6 @@ app.use((err, req, res, next) =>{
         }
     })
 });
-
-//    - Send a DELETE request to /quotes/:id to DELETE a quote
-app.delete("/quotes/:id", async(req, res) =>{
-    try{
-        const quote = await records.getQuote(req.params.id);
-        await records.deleteQuote(quote);
-        res.status(204).end();
-    }catch (err) {
-        res.status(500).json({message: err.message});
-    }
-});
-//TODO:
-//    - Send a GET request to /quotes/quote/random to READ (view) a random quote
 
 
 app.listen(3000, () => console.log('Quote API listening on port 3000!'));
