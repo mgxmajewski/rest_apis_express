@@ -11,7 +11,7 @@ app.get('/quotes', async (req, res)=>{
         const quotes = await records.getQuotes();
         res.json(quotes);
     }catch (err) {
-        res.json({message: err.message});
+        res.status(500).json({message: err.message});
     }
 });
 
@@ -19,20 +19,29 @@ app.get('/quotes', async (req, res)=>{
 app.get('/quotes/:id', async (req, res)=>{
     try{
         const quote = await records.getQuote(req.params.id);
-        res.json(quote);
+        if(quote){
+            res.json(quote);
+        } else {
+            res.status(404).json({message: "Not found dude"});
+        }
+
     }catch (err) {
-        res.json({message: err.message});
+        res.status(500).json({message: err.message});
     }
 });
 
 app.post('/quotes', async(req, res) =>{
     try{
-        throw new Error("pofspofp[ofa[sdfoa");
-        const quote = await records.createQuote({
-            quote: req.body.quote,
-            author: req.body.author
-        });
-        res.json(quote);
+        if(req.body.author && req.body.quote){
+            const quote = await records.createQuote({
+                quote: req.body.quote,
+                author: req.body.author
+            });
+            res.status(201).json(quote);
+        } else{
+            res.status(400).json({message: "Author and quote required."});
+        }
+
     }catch (err){
         res.status(500).json({message: err.message});
     }
