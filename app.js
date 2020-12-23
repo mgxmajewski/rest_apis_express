@@ -3,6 +3,8 @@ const app = express();
 
 const records = require('./records');
 
+app.use(express.json());
+
 // Send a GET request to /quotes READ a list of quotes
 app.get('/quotes', async (req, res)=>{
     const quotes = await records.getQuotes();
@@ -11,7 +13,15 @@ app.get('/quotes', async (req, res)=>{
 
 // Send a GET request to /quotes/:id to READ(view) a quote
 app.get('/quotes/:id', async (req, res)=>{
-    const quote = await record.getQuote(req.params.id);
+    const quote = await records.getQuote(req.params.id);
+    res.json(quote);
+});
+
+app.post('/quotes', (req, res) =>{
+    const quote = records.createQuote({
+        quote: req.body.quote,
+        author: req.body.author
+    });
     res.json(quote);
 });
 
