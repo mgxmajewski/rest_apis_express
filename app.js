@@ -30,6 +30,7 @@ app.get('/quotes/:id', async (req, res)=>{
     }
 });
 
+//    - Send a POST request to /quotes to CREATE a new quote
 app.post('/quotes', async(req, res) =>{
     try{
         if(req.body.author && req.body.quote){
@@ -47,9 +48,24 @@ app.post('/quotes', async(req, res) =>{
     }
 });
 
-//TODO:
-//    - Send a POST request to /quotes to CREATE a new quote
 //    - Send a PUT request to /quotes/:id to UPDATE (edit) a quote
+app.put('/quotes/:id', async (req, res)=>{
+    try{
+        const quote = await records.getQuote(req.params.id);
+        if(quote){
+            quote.quote = req.body.quote;
+            quote.author = req.body.author;
+
+            await records.updateQuote(quote);
+            res.status(204).end();
+        } else {
+            res.status(404).json({message: "Wasn't foud"});
+        }
+    }catch (e) {
+        res.status(500).json({message: err.message});
+    }
+});
+//TODO:
 //    - Send a DELETE request to /quotes/:id to DELETE a quote
 //    - Send a GET request to /quotes/quote/random to READ (view) a random quote
 
