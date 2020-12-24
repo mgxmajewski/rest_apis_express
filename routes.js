@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const records = require('./records');
 
-
 function asyncHandler(cb){
     return async (req, res, next) => {
         try {
@@ -14,10 +13,10 @@ function asyncHandler(cb){
 }
 
 // Send a GET request to /quotes READ a list of quotes
-router.get('/quotes', asyncHandler(async (req, res)=>{
+router.get('/quotes', async (req, res)=>{
     const quotes = await records.getQuotes();
     res.json(quotes);
-}));
+});
 
 // Send a GET request to /quotes/:id to READ(view) a quote
 router.get('/quotes/:id', asyncHandler(async (req, res)=>{
