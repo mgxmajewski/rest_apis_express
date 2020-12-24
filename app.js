@@ -5,10 +5,8 @@ const routes = require('./routes');
 app.use(express.json());
 app.use('/api', routes);
 
-
-
 app.use((req, res, next) => {
-    const err = new Error("Not found");
+    const err = new Error("Not found lol");
     err.status = 404;
     next(err);
 });
@@ -19,7 +17,7 @@ app.use((err, req, res, next) =>{
         error: {
             message: err.message
         }
-    })
+    });
 });
 
 
